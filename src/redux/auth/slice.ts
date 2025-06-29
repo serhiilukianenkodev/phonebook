@@ -1,17 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { register, logIn, logOut, refreshUser } from "./operations";
+import { User } from "../../common-types";
+
+export interface AuthState {
+  user: User;
+  token: string | null;
+  isLoggedIn: boolean;
+  isRefreshing: boolean;
+}
+
+const initialState: AuthState = {
+  user: {
+    name: null,
+    email: null,
+  },
+  token: null,
+  isLoggedIn: false,
+  isRefreshing: false,
+};
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    user: {
-      name: null,
-      email: null,
-    },
-    token: null,
-    isLoggedIn: false,
-    isRefreshing: false,
-  },
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(register.fulfilled, (state, action) => {

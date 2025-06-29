@@ -1,14 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import ContactForm from "../../components/ContactForm/ContactForm";
 import ContactList from "../../components/ContactList/ContactList";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Loader from "../../components/Loader/Loader";
 import { selectError } from "../../redux/contacts/selectors";
 import { fetchContacts } from "../../redux/contacts/operations";
+import { AppDispatch } from "../../redux/store";
 
-function ContactsPage() {
-  const dispatch = useDispatch();
+const ContactsPage: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const error = useSelector(selectError);
 
   useEffect(() => {
@@ -29,6 +30,6 @@ function ContactsPage() {
       <Loader />
     </>
   );
-}
+};
 
 export default ContactsPage;

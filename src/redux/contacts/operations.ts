@@ -1,20 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { Contact, RejectValue } from "../../common-types";
+import { string } from "yup";
 
 axios.defaults.baseURL = "https://connections-api.goit.global/";
 
 // GET @ /contacts
-export const fetchContacts = createAsyncThunk(
-  "contacts/fetchAll",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get("/contacts");
-      return response.data;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message);
-    }
+export const fetchContacts = createAsyncThunk<
+  Contact[],
+  void,
+  { rejectValue: RejectValue }
+>("contacts/fetchAll", async (_, thunkAPI) => {
+  try {
+    const response = await axios.get<Contact[]>("/contacts");
+    return response.data;
+  } catch (e: any) {
+    return thunkAPI.rejectWithValue({ message: e.message });
   }
-);
+});
 
 // POST @ /contacts
 export const addContact = createAsyncThunk(
