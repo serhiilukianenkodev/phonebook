@@ -3,7 +3,7 @@ import { RingLoader } from "react-spinners";
 import css from "./Loader.module.css";
 import { selectLoading } from "../../redux/contacts/selectors";
 
-const override = {
+const override: React.CSSProperties = {
   display: "block",
   position: "fixed",
 };

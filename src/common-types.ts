@@ -1,8 +1,8 @@
-export interface Contact {
+export interface ContactType {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  number: string;
 }
 
 export interface User {
@@ -12,4 +12,10 @@ export interface User {
 
 export interface RejectValue {
   message: string;
+}
+
+export interface FormValues {
+  name: string;
+  email: string;
+  password: string;
 }

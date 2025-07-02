@@ -1,7 +1,7 @@
-import { Suspense } from "react";
+import { FC, Suspense } from "react";
 import AppBar from "./AppBar/AppBar";
 
-const Layout = ({ children }) => {
+const Layout: FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <div style={{ margin: "0 auto", padding: "0 16px" }}>
       <AppBar />

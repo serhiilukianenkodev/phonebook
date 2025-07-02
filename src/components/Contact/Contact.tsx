@@ -3,11 +3,15 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaUserAstronaut } from "react-icons/fa6";
 import { IoIosPhonePortrait } from "react-icons/io";
-import { useDispatch } from "react-redux";
 import { deleteContact } from "../../redux/contacts/operations";
+import { ContactType } from "../../common-types"; // Adjust the import path as necessary
+import { useAppDispatch } from "../../redux/store";
 
-const Contact = ({ contact }) => {
-  const dispatch = useDispatch();
+interface ContactProps {
+  contact: ContactType;
+}
+const Contact = ({ contact }: ContactProps) => {
+  const dispatch = useAppDispatch();
 
   const handleDelete = () => dispatch(deleteContact(contact.id));
 

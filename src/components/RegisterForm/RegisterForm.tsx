@@ -1,19 +1,28 @@
-import { useDispatch } from "react-redux";
 import { register } from "../../redux/auth/operations";
-import { Form, Field, Formik, ErrorMessage } from "formik";
+import { Form, Field, Formik, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import css from "./RegisterForm.module.css";
+import { useAppDispatch } from "../../redux/store";
+
+interface FormValues {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const RegisterForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = (values, options) => {
+  const handleSubmit = (
+    values: FormValues,
+    options: FormikHelpers<FormValues>
+  ) => {
     dispatch(register(values));
 
     options.resetForm();
   };
 
-  const initialValues = {
+  const initialValues: FormValues = {
     name: "",
     email: "",
     password: "",

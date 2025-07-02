@@ -1,14 +1,19 @@
-import { useDispatch } from "react-redux";
 import { logIn } from "../../redux/auth/operations";
-import { Form, Field, Formik, ErrorMessage } from "formik";
+import { Form, Field, Formik, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import css from "./LoginForm.module.css";
 import toast from "react-hot-toast";
+import { useAppDispatch } from "../../redux/store";
+
+interface FormValues {
+  email: string;
+  password: string;
+}
 
 const LoginForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const initialValues = {
+  const initialValues: FormValues = {
     email: "",
     password: "",
   };
@@ -18,7 +23,10 @@ const LoginForm = () => {
     password: Yup.string().min(5).trim().required(),
   });
 
-  const handleSubmit = (values, options) => {
+  const handleSubmit = (
+    values: FormValues,
+    options: FormikHelpers<FormValues>
+  ) => {
     dispatch(logIn(values))
       .unwrap()
       .then(() => {

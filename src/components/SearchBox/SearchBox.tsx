@@ -1,14 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import css from "./SearchBox.module.css";
 import { selectNameFilter } from "../../redux/filters/selectors";
 import { changeFilter } from "../../redux/filters/slice";
+import { useAppDispatch } from "../../redux/store";
+import { FormEvent } from "react";
 
 const SearchBox = () => {
   const filter = useSelector(selectNameFilter);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const handleChange = (evt) => {
-    dispatch(changeFilter(evt.target.value));
+  const handleChange = (evt: FormEvent<HTMLInputElement>) => {
+    dispatch(changeFilter(evt.currentTarget.value));
   };
   return (
     <div className={css.searchBox}>

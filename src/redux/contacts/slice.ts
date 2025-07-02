@@ -1,31 +1,52 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { fetchContacts, addContact, deleteContact } from "./operations";
 import { logOut } from "../auth/operations";
 import toast from "react-hot-toast";
+import { ContactType } from "../../common-types";
+
+interface ContactState {
+  items: ContactType[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: ContactState = {
+  items: [],
+  loading: false,
+  error: null,
+};
 
 const slice = createSlice({
   name: "contacts",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchContacts.fulfilled, (state, action) => {
-        state.items = action.payload;
-      })
-      .addCase(addContact.fulfilled, (state, action) => {
-        state.items.push(action.payload);
-        toast.success("Contact is added successfully!");
-      })
-      .addCase(deleteContact.fulfilled, (state, action) => {
-        const index = state.items.findIndex(
-          (contact) => contact.id === action.payload.id
-        );
-        state.items.splice(index, 1);
-        toast.success("Contact is delete successfully!");
-      })
+      .addCase(
+        fetchContacts.fulfilled,
+        (state, action: PayloadAction<ContactType[]>) => {
+          state.items = action.payload;
+        }
+      )
+      .addCase(
+        addContact.fulfilled,
+        (state, action: PayloadAction<ContactType | undefined>) => {
+          if (action.payload) {
+            state.items.push(action.payload);
+            toast.success("Contact is added successfully!");
+          }
+        }
+      )
+      .addCase(
+        deleteContact.fulfilled,
+        (state, action: PayloadAction<{ id: string }>) => {
+          const index = state.items.findIndex(
+            (contact) => contact.id === action.payload.id
+          );
+          state.items.splice(index, 1);
+          toast.success("Contact is delete successfully!");
+        }
+      )
       .addCase(logOut.fulfilled, (state) => {
         state.items = [];
       })
@@ -45,7 +66,7 @@ const slice = createSlice({
           addContact.rejected,
           deleteContact.rejected
         ),
-        (state, action) => {
+        (state, action: PayloadAction<any>) => {
           state.loading = false;
           state.error = action.payload;
           toast.error(

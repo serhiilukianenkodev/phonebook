@@ -19,16 +19,24 @@ const clearAuthHeader = (): void => {
  * POST @ /users/signup
  * body: { name, email, password }
  */
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export const register = createAsyncThunk(
   "auth/register",
-  async (credentials, thunkAPI) => {
+  async (credentials: RegisterPayload, thunkAPI) => {
     try {
       const res = await axios.post("/users/signup", credentials);
       // After successful registration, add the token to the HTTP header
       setAuthHeader(res.data.token);
       return res.data;
-    } catch (error: { message: string } | any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        return thunkAPI.rejectWithValue(e.message);
+      }
     }
   }
 );
@@ -37,16 +45,23 @@ export const register = createAsyncThunk(
  * POST @ /users/login
  * body: { email, password }
  */
+interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 export const logIn = createAsyncThunk(
   "auth/login",
-  async (credentials, thunkAPI) => {
+  async (credentials: LoginPayload, thunkAPI) => {
     try {
       const res = await axios.post("/users/login", credentials);
       // After successful login, add the token to the HTTP header
       setAuthHeader(res.data.token);
       return res.data;
-    } catch (error: { message: string } | any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        return thunkAPI.rejectWithValue(e.message);
+      }
     }
   }
 );
@@ -60,8 +75,10 @@ export const logOut = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
     await axios.post("/users/logout");
     // After a successful logout, remove the token from the HTTP header
     clearAuthHeader();
-  } catch (error: { message: string } | any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
   }
 });
 
@@ -88,7 +105,10 @@ export const refreshUser = createAsyncThunk<
     setAuthHeader(persistedToken);
     const res = await axios.get<User>("/users/current");
     return res.data;
-  } catch (error: { message: string } | any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
+    return thunkAPI.rejectWithValue("Unknown error occurred");
   }
 });
